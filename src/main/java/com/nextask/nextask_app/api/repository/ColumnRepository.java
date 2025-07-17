@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ColumnRepository extends JpaRepository<ColumnEntity, String> {
-  
+  boolean existsByName(String name);
 }
