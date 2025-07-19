@@ -79,4 +79,8 @@ public class CardService {
     }
     cardRepository.deleteById(id);
   }
+
+  public List<Card> getCardsByTag(String tagId) {
+        return cardRepository.findByTagId(tagId);
+    }
 }
