@@ -23,7 +23,7 @@ public class Card {
   @Column(name = "story_points")
   private String storyPoints;
 
-  @ManyToMany(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "column_id", nullable = false)
   private ColumnEntity column;
 
