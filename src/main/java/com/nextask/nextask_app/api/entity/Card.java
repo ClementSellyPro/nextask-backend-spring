@@ -9,6 +9,8 @@ import java.util.Set;
 @Table(name = "cards")
 public class Card {
   @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(columnDefinition = "varchar(36)")
   private String id;
 
   @Column(nullable = false)

@@ -8,6 +8,8 @@ import java.util.Set;
 @Table(name = "tags")
 public class Tag {
   @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(columnDefinition = "varchar(36)")
   private String id;
 
   @Column(nullable = false)

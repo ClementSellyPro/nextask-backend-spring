@@ -8,6 +8,8 @@ import java.util.List;
 @Table(name = "columns")
 public class ColumnEntity {
   @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(columnDefinition = "varchar(36)")
   private String id;
   
   @Column(nullable = false)
