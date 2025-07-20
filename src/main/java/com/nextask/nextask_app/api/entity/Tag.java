@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "tags")
 public class Tag {
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.UUID)
   @Column(columnDefinition = "varchar(36)")
   private String id;
 
@@ -19,6 +21,7 @@ public class Tag {
   private String color;
 
   @ManyToMany(mappedBy = "tags")
+  @JsonIgnore
   private Set<Card> cards = new HashSet<>();
 
   // Constructors

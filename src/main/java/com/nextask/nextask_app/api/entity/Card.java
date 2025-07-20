@@ -9,7 +9,7 @@ import java.util.Set;
 @Table(name = "cards")
 public class Card {
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.UUID)
   @Column(columnDefinition = "varchar(36)")
   private String id;
 

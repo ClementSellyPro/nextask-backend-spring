@@ -8,7 +8,7 @@ import java.util.List;
 @Table(name = "columns")
 public class ColumnEntity {
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.UUID)
   @Column(columnDefinition = "varchar(36)")
   private String id;
   
