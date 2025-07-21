@@ -24,6 +24,15 @@ public class Tag {
   @JsonIgnore
   private Set<Card> cards = new HashSet<>();
 
+  @Override
+    public String toString() {
+      return "Tag{" +
+              "id='" + id + '\'' +
+              ", name='" + name + '\'' +
+              ", color='" + color + '\'' +
+              '}';
+    }
+
   // Constructors
   public Tag() {}
 
