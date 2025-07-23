@@ -5,6 +5,11 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+// import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "cards")
 public class Card {
@@ -20,13 +25,18 @@ public class Card {
   private String description;
 
   @Column(name = "limit_date")
+  @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
   private LocalDateTime limitDate;
 
   @Column(name = "story_points")
   private String storyPoints;
 
+  @Column(name = "color")
+  private String color;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "column_id", nullable = false)
+  @JsonBackReference
   private ColumnEntity column;
 
   @ManyToMany(fetch = FetchType.LAZY)
@@ -36,6 +46,17 @@ public class Card {
     inverseJoinColumns = @JoinColumn(name = "tag_id")
   )
   private Set<Tag> tags = new HashSet<>();
+
+  @Override
+  public String toString() {
+    return "Card{" +
+            "id='" + id + '\'' +
+            ", title='" + title + '\'' +
+            ", description='" + description + '\'' +
+            ", limitDate='" + limitDate + '\'' +
+            ", storyPoints='" + storyPoints + '\'' +
+            '}';
+  }
 
   // Constructors
   public Card() {}
@@ -63,6 +84,9 @@ public class Card {
   
   public String getStoryPoints() { return storyPoints; }
   public void setStoryPoints(String storyPoints) { this.storyPoints = storyPoints; }
+
+  public String getColor() { return color; }
+  public void setColor(String color) { this.color = color; }
   
   public ColumnEntity getColumn() { return column; }
   public void setColumn(ColumnEntity column) { this.column = column; }

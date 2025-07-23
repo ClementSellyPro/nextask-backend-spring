@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "columns")
 public class ColumnEntity {
@@ -19,6 +21,7 @@ public class ColumnEntity {
   private String color;
 
   @OneToMany(mappedBy = "column", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JsonManagedReference
   private List<Card> cards = new ArrayList<>();
 
   // Constructors

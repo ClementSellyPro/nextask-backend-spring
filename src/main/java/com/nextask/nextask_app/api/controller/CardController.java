@@ -1,5 +1,6 @@
 package com.nextask.nextask_app.api.controller;
 
+import com.nextask.nextask_app.api.DTO.CreatedCardRequest;
 import com.nextask.nextask_app.api.entity.Card;
 import com.nextask.nextask_app.api.service.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +41,14 @@ public class CardController {
 
     // POST /api/cards - Créer une nouvelle carte
     @PostMapping
-    public ResponseEntity<Card> createCard(@RequestBody Card card) {
+    public ResponseEntity<Card> createCard(@RequestBody CreatedCardRequest cardRequest) {
+        System.out.println("YES YES");
         try {
-            Card createdCard = cardService.createCard(card);
+            Card createdCard = cardService.createCard(cardRequest);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdCard);
         } catch (RuntimeException e) {
+            System.err.println("ERROR CREATING CARD: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
     }

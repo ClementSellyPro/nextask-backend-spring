@@ -1,5 +1,6 @@
 package com.nextask.nextask_app.api.service;
 
+import com.nextask.nextask_app.api.DTO.CreatedCardRequest;
 import com.nextask.nextask_app.api.entity.Card;
 import com.nextask.nextask_app.api.entity.ColumnEntity;
 import com.nextask.nextask_app.api.entity.Tag;
@@ -8,7 +9,8 @@ import com.nextask.nextask_app.api.repository.ColumnRepository;
 import com.nextask.nextask_app.api.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-// import java.time.LocalDateTime;
+
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -36,19 +38,34 @@ public class CardService {
     return cardRepository.findByColumnId(columnId);
   }
 
-  public Card createCard(Card card) {
-    if (card.getColumn() != null) {
-      ColumnEntity column = columnRepository.findById(card.getColumn().getId()).orElseThrow(() -> new RuntimeException("Colonne non trouvée"));
+  public Card createCard(CreatedCardRequest cardRequest) {
+    Card card = new Card();
+    card.setTitle(cardRequest.getTitle());
+    card.setDescription(cardRequest.getDescription());
+    card.setLimitDate(cardRequest.getLimitDate());
+    card.setStoryPoints(cardRequest.getStoryPoints());
+
+    if (cardRequest.getColumn_id() != null) {
+      ColumnEntity column = columnRepository.findById(cardRequest.getColumn_id()).orElseThrow(() -> new RuntimeException("Colonne non trouvée"));
       card.setColumn(column);
     }
 
-    if (card.getTags() != null && !card.getTags().isEmpty()) {
-      Set<Tag> validTags = card.getTags();
-      for(Tag tag : validTags) {
-        if (!tagRepository.existsById(tag.getId())) {
-          throw new RuntimeException("Tag non trouvé avec l'ID: " + tag.getId());
+    if (cardRequest.getTags() != null && !cardRequest.getTags().isEmpty()) {
+      Set<String> validTags = cardRequest.getTags();
+
+      for(String tag : validTags) {
+        if (!tagRepository.existsById(tag)) {
+          throw new RuntimeException("Tag non trouvé avec l'ID: " + tag);
         }
       }
+
+      Set<Tag> tags = new HashSet<>();
+      for(String tagId : validTags) {
+        Tag tag = tagRepository.findById(tagId)
+          .orElseThrow(() -> new RuntimeException("Tag non trouvé avec l'ID: " + tagId));
+        tags.add(tag);
+      }
+      card.setTags(tags);
     }
     return cardRepository.save(card);
   }
