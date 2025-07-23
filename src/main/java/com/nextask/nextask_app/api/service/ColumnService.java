@@ -16,10 +16,6 @@ public class ColumnService {
     return columnRepository.findAll();
   }
 
-  public Optional<ColumnEntity> getColumnWithCards(String id) {
-    return columnRepository.findByIdWithCards(id);
-  }
-
   public Optional<ColumnEntity> getColumnById(String id) {
     return columnRepository.findById(id);
   }

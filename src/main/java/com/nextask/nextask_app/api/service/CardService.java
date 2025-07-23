@@ -1,6 +1,7 @@
 package com.nextask.nextask_app.api.service;
 
 import com.nextask.nextask_app.api.DTO.CreatedCardRequest;
+import com.nextask.nextask_app.api.DTO.UpdateCardRequest;
 import com.nextask.nextask_app.api.entity.Card;
 import com.nextask.nextask_app.api.entity.ColumnEntity;
 import com.nextask.nextask_app.api.entity.Tag;
@@ -70,23 +71,36 @@ public class CardService {
     return cardRepository.save(card);
   }
 
-  public Card updateCard(String id, Card cardDetails) {
+  public Card updateCard(String id, UpdateCardRequest cardRequest) {
     Card card = cardRepository.findById(id).orElseThrow(() -> new RuntimeException("Carte non trouvée avec l'ID: " + id));
     
-    card.setTitle(cardDetails.getTitle());
-    card.setDescription(cardDetails.getDescription());
-    card.setLimitDate(cardDetails.getLimitDate());
-    card.setStoryPoints(cardDetails.getStoryPoints());
+    if (cardRequest.getTitle() != null) {
+        card.setTitle(cardRequest.getTitle());
+    }
+    if (cardRequest.getDescription() != null) {
+        card.setDescription(cardRequest.getDescription());
+    }
+    if (cardRequest.getLimitDate() != null) {
+        card.setLimitDate(cardRequest.getLimitDate());
+    }
+    if (cardRequest.getStoryPoints() != null) {
+        card.setStoryPoints(cardRequest.getStoryPoints());
+    }
     
-    if (cardDetails.getColumn() != null) {
-      ColumnEntity column = columnRepository.findById(cardDetails.getColumn().getId()).orElseThrow(() -> new RuntimeException("Colonne non trouvée"));
+    if (cardRequest.getColumn_id() != null) {
+      ColumnEntity column = columnRepository.findById(cardRequest.getColumn_id()).orElseThrow(() -> new RuntimeException("Colonne non trouvée"));
       card.setColumn(column);
     }
     
-    if (cardDetails.getTags() != null) {
-      card.setTags(cardDetails.getTags());
+    if (cardRequest.getTags() != null) {
+      Set<Tag> tags = new HashSet<>();
+        for (String tagId : cardRequest.getTags()) {
+          Tag tag = tagRepository.findById(tagId)
+              .orElseThrow(() -> new RuntimeException("Tag non trouvé avec l'ID: " + tagId));
+          tags.add(tag);
+        }
+        card.setTags(tags);
     }
-    
     return cardRepository.save(card);
   }
 

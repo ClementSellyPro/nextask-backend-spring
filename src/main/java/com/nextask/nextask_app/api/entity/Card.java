@@ -8,8 +8,6 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-// import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @Table(name = "cards")
 public class Card {
@@ -85,8 +83,6 @@ public class Card {
   public String getStoryPoints() { return storyPoints; }
   public void setStoryPoints(String storyPoints) { this.storyPoints = storyPoints; }
 
-  public String getColor() { return color; }
-  public void setColor(String color) { this.color = color; }
   
   public ColumnEntity getColumn() { return column; }
   public void setColumn(ColumnEntity column) { this.column = column; }
