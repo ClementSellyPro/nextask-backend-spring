@@ -20,6 +20,10 @@ public class Tag {
   @Column(nullable = false)
   private String color;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "project_id", nullable = false)
+  private Project project;
+
   @ManyToMany(mappedBy = "tags")
   @JsonIgnore
   private Set<Card> cards = new HashSet<>();
@@ -53,4 +57,7 @@ public class Tag {
   public void setColor(String color) { this.color = color; }
 
   public Set<Card> getCards() { return cards; }
+
+  public Project getProject() { return project; }
+  public void setProject(Project project) { this.project = project; }
 }

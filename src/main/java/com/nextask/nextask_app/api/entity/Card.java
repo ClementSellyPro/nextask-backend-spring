@@ -32,6 +32,10 @@ public class Card {
   @Column(name = "color")
   private String color;
 
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinColumn(name = "project_id", nullable = false)
+  private Project project;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "column_id", nullable = false)
   @JsonBackReference
@@ -89,4 +93,7 @@ public class Card {
   
   public Set<Tag> getTags() { return tags; }
   public void setTags(Set<Tag> tags) { this.tags = tags; }
+
+  public Project getProject() { return project; }
+  public void setProject(Project project) { this.project = project; }
 }

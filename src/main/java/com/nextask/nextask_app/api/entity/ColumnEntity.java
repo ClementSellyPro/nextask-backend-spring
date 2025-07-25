@@ -20,6 +20,10 @@ public class ColumnEntity {
   @Column(nullable = false)
   private String color;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "project_id", nullable = false)
+  private Project project;
+
   @OneToMany(mappedBy = "column", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonManagedReference
   private List<Card> cards = new ArrayList<>();
@@ -31,6 +35,11 @@ public class ColumnEntity {
     this.id = id;
     this.name = name;
     this.color = color;
+  }
+
+  public ColumnEntity(String name, Project project) {
+    this.name = name;
+    this.project = project;
   }
 
   // Getters and Setters
@@ -45,4 +54,7 @@ public class ColumnEntity {
   
   public List<Card> getCards() { return cards; }
   public void setCards(List<Card> cards) { this.cards = cards; }
+
+  public Project getProject() { return project; }
+  public void setProject(Project project) { this.project = project; } 
 }
