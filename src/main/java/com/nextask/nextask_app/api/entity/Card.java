@@ -29,10 +29,7 @@ public class Card {
   @Column(name = "story_points")
   private String storyPoints;
 
-  @Column(name = "color")
-  private String color;
-
-  @ManyToMany(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "project_id", nullable = false)
   private Project project;
 
@@ -87,7 +84,6 @@ public class Card {
   public String getStoryPoints() { return storyPoints; }
   public void setStoryPoints(String storyPoints) { this.storyPoints = storyPoints; }
 
-  
   public ColumnEntity getColumn() { return column; }
   public void setColumn(ColumnEntity column) { this.column = column; }
   

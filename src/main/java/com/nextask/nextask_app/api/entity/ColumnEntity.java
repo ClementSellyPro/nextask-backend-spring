@@ -31,14 +31,9 @@ public class ColumnEntity {
   // Constructors
   public ColumnEntity() {}
   
-  public ColumnEntity(String id, String name, String color) {
-    this.id = id;
+  public ColumnEntity(String name, String color, Project project) {
     this.name = name;
     this.color = color;
-  }
-
-  public ColumnEntity(String name, Project project) {
-    this.name = name;
     this.project = project;
   }
 

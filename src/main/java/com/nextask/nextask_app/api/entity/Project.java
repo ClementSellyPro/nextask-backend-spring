@@ -1,18 +1,22 @@
 package com.nextask.nextask_app.api.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "projects")
 public class Project {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
@@ -26,14 +30,13 @@ public class Project {
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
-  @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL)
-  private List<ColumnEntity> columns;
+  @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<ColumnEntity> columns = new ArrayList<>();;
 
   // Constructors
   public Project() {}
 
-  public Project(String id, String name, User user) {
-    this.id = id;
+  public Project(String name, User user) {
     this.name = name;
     this.user = user;
   }
