@@ -12,7 +12,7 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtUtil {
     
-    private String secret = "mySecretKeyThatShouldBeAtLeast32CharactersLong";
+    private String secret = "012345689abcdef0123789abcdef3456789abcdef0123489abcdefhd739ifywsa3";
     private int expiration = 86400; // 24h en secondes
     
     private Key getSigningKey() {

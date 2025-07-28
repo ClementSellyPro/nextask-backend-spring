@@ -1,5 +1,7 @@
 package com.nextask.nextask_app.api.Util;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,6 +26,17 @@ public class JwtAuthenticateurFilter extends OncePerRequestFilter {
     @Lazy
     @Autowired
     private UserDetailsService userDetailsService;
+
+    private static final List<String> EXCLUDED_PATHS = List.of(
+        "/api/auth/login",
+        "/api/auth/register"
+    );
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        return EXCLUDED_PATHS.stream().anyMatch(path::equals);
+    }
     
     @Override
     protected void doFilterInternal(HttpServletRequest request, 

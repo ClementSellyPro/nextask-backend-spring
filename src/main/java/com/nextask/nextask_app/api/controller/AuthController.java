@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,7 @@ import com.nextask.nextask_app.api.service.UserService;
 
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class AuthController {
     
     @Autowired
@@ -27,7 +29,6 @@ public class AuthController {
     
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody LoginRequest request) {
-        System.out.println("REGISTER ::::: " + request);
         try {
             userService.createUser(request.getUsername(), request.getPassword());
             return ResponseEntity.ok("User created successfully");
@@ -38,14 +39,19 @@ public class AuthController {
     
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+        System.out.println("Attempting login for: " + request.getUsername());
         try {
             authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
             );
+            System.out.println("Login successful for:" + request.getUsername());
             
             String token = jwtUtil.generateToken(request.getUsername());
+            System.out.println("Generated token: " + token);
+
             return ResponseEntity.ok(new LoginResponse(token));
         } catch (Exception e) {
+            System.err.println("Login failed: " + e.getMessage());
             return ResponseEntity.status(401).body(new LoginResponse("Invalid credentials"));
         }
     }

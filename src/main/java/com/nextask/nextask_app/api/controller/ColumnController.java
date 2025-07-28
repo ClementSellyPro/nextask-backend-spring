@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Optional;
+// import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/columns")
@@ -19,23 +19,23 @@ public class ColumnController {
     // GET /api/columns - Récupérer toutes les colonnes
     @GetMapping
     public ResponseEntity<List<ColumnEntity>> getAllColumns() {
-        List<ColumnEntity> columns = columnService.getAllColumns();
+        List<ColumnEntity> columns = columnService.getUserColumns();
         return ResponseEntity.ok(columns);
     }
 
-    // GET /api/columns/{id} - Récupérer une colonne par ID
-    @GetMapping("/{id}")
-    public ResponseEntity<ColumnEntity> getColumnById(@PathVariable String id) {
-        Optional<ColumnEntity> column = columnService.getColumnById(id);
-        return column.map(ResponseEntity::ok)
-                     .orElse(ResponseEntity.notFound().build());
-    }
+    // // GET /api/columns/{id} - Récupérer une colonne par ID
+    // @GetMapping("/{id}")
+    // public ResponseEntity<ColumnEntity> getColumnById(@PathVariable String id) {
+    //     Optional<ColumnEntity> column = columnService.getColumnById(id);
+    //     return column.map(ResponseEntity::ok)
+    //                  .orElse(ResponseEntity.notFound().build());
+    // }
 
     // POST /api/columns - Créer une nouvelle colonne
     @PostMapping
     public ResponseEntity<ColumnEntity> createColumn(@RequestBody ColumnEntity column) {
         try {
-            ColumnEntity createdColumn = columnService.createColumn(column);
+            ColumnEntity createdColumn = columnService.createColumn(column.getName(), column.getColor());
             return ResponseEntity.status(HttpStatus.CREATED).body(createdColumn);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().build();
@@ -46,7 +46,7 @@ public class ColumnController {
     @PutMapping("/{id}")
     public ResponseEntity<ColumnEntity> updateColumn(@PathVariable String id, @RequestBody ColumnEntity columnDetails) {
         try {
-            ColumnEntity updatedColumn = columnService.updateColumn(id, columnDetails);
+            ColumnEntity updatedColumn = columnService.updateColumn(id, columnDetails.getName(), columnDetails.getColor());
             return ResponseEntity.ok(updatedColumn);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();

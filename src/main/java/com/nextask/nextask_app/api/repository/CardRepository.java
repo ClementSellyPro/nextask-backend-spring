@@ -10,6 +10,8 @@ import java.util.List;
 
 @Repository
 public interface CardRepository extends JpaRepository<Card, String> {
+  List<Card> findByColumnIdOrderByTitle(String columnId);
+  List<Card> findByProjectId(String projectId);
   List<Card> findByColumnId(String columnId);
 
   @Query("SELECT c FROM Card c JOIN c.tags t WHERE t.id = :tagId")

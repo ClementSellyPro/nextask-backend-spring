@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/cards")
@@ -19,19 +18,19 @@ public class CardController {
     private CardService cardService;
     
     // GET /api/cards - Récupérer toutes les cartes
-    @GetMapping
-    public ResponseEntity<List<Card>> getAllCards() {
-        List<Card> cards = cardService.getAllCards();
-        return ResponseEntity.ok(cards);
-    }
+    // @GetMapping
+    // public ResponseEntity<List<Card>> getAllCards() {
+    //     List<Card> cards = cardService.getAllCards();
+    //     return ResponseEntity.ok(cards);
+    // }
     
     // GET /api/cards/{id} - Récupérer une carte par ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Card> getCardById(@PathVariable String id) {
-        Optional<Card> card = cardService.getCardById(id);
-        return card.map(ResponseEntity::ok)
-                   .orElse(ResponseEntity.notFound().build());
-    }
+    // @GetMapping("/{id}")
+    // public ResponseEntity<Card> getCardById(@PathVariable String id) {
+    //     Optional<Card> card = cardService.getCardById(id);
+    //     return card.map(ResponseEntity::ok)
+    //                .orElse(ResponseEntity.notFound().build());
+    // }
 
     // GET /api/cards/column/{columnId} - Récupérer les cartes d'une colonne
     @GetMapping("/column/{columnId}")
@@ -44,7 +43,13 @@ public class CardController {
     @PostMapping
     public ResponseEntity<Card> createCard(@RequestBody CreatedCardRequest cardRequest) {
         try {
-            Card createdCard = cardService.createCard(cardRequest);
+            Card createdCard = cardService.createCard(
+                cardRequest.getColumn_id(), 
+                cardRequest.getTitle(), 
+                cardRequest.getDescription(), 
+                cardRequest.getLimitDate(), 
+                cardRequest.getStoryPoints()
+            );
             return ResponseEntity.status(HttpStatus.CREATED).body(createdCard);
         } catch (RuntimeException e) {
             System.err.println("ERROR CREATING CARD: " + e.getMessage());
@@ -57,7 +62,13 @@ public class CardController {
     @PutMapping("/{id}")
     public ResponseEntity<Card> updateCard(@PathVariable String id, @RequestBody UpdateCardRequest cardRequest) {
         try {
-            Card updatedCard = cardService.updateCard(id, cardRequest);
+            Card updatedCard = cardService.updateCard(
+                id, 
+                cardRequest.getTitle(), 
+                cardRequest.getDescription(), 
+                cardRequest.getLimitDate(), 
+                cardRequest.getStoryPoints()
+            );
             return ResponseEntity.ok(updatedCard);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
@@ -76,9 +87,9 @@ public class CardController {
     }
 
     // GET /api/cards/tag/{tagId} - Récupérer les cartes par tag
-    @GetMapping("/tag/{tagId}")
-    public ResponseEntity<List<Card>> getCardsByTag(@PathVariable String tagId) {
-        List<Card> cards = cardService.getCardsByTag(tagId);
-        return ResponseEntity.ok(cards);
-    }
+    // @GetMapping("/tag/{tagId}")
+    // public ResponseEntity<List<Card>> getCardsByTag(@PathVariable String tagId) {
+    //     List<Card> cards = cardService.getCardsByTag(tagId);
+    //     return ResponseEntity.ok(cards);
+    // }
 }
