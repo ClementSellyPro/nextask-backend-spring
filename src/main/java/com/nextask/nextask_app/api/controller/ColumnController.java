@@ -1,5 +1,6 @@
 package com.nextask.nextask_app.api.controller;
 
+import com.nextask.nextask_app.api.DTO.ColumnDTO;
 import com.nextask.nextask_app.api.entity.ColumnEntity;
 import com.nextask.nextask_app.api.service.ColumnService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,18 +9,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 // import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/columns")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class ColumnController {
   @Autowired
     private ColumnService columnService;
     
     // GET /api/columns - Récupérer toutes les colonnes
     @GetMapping
-    public ResponseEntity<List<ColumnEntity>> getAllColumns() {
-        List<ColumnEntity> columns = columnService.getUserColumns();
+    public ResponseEntity<List<ColumnDTO>> getAllColumns() {
+        List<ColumnDTO> columns = columnService.getUserColumns()
+        .stream().map(ColumnDTO::new).collect(Collectors.toList());
         return ResponseEntity.ok(columns);
     }
 
@@ -33,10 +36,11 @@ public class ColumnController {
 
     // POST /api/columns - Créer une nouvelle colonne
     @PostMapping
-    public ResponseEntity<ColumnEntity> createColumn(@RequestBody ColumnEntity column) {
+    public ResponseEntity<ColumnDTO> createColumn(@RequestBody ColumnDTO column) {
         try {
             ColumnEntity createdColumn = columnService.createColumn(column.getName(), column.getColor());
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdColumn);
+            ColumnDTO responseColumn = new ColumnDTO(createdColumn);
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseColumn);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().build();
         }

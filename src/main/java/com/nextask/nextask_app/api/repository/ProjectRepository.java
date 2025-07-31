@@ -10,4 +10,5 @@ import com.nextask.nextask_app.api.entity.Project;
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, String> {
     Optional<Project> findByUserId(String userId);
+    Optional<Project> findByUserUsername(String username);
 }

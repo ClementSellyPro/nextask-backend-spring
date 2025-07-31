@@ -6,6 +6,8 @@ import java.util.Collections;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,6 +15,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -30,8 +33,18 @@ public class User implements UserDetails {
   @Column(nullable = false)
   private String password;
 
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private Project project;
+//   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//   @JoinColumn(name = "project_id")
+//   @JsonIgnore
+//   private Project project;
+
+    @Override
+    public String toString() {
+        return "User{" +
+            "id='" + id + '\'' +
+            ", username='" + username + '\'' +
+            '}';
+    }
 
   // Required methods from UserDetails
   @Override
@@ -81,11 +94,9 @@ public class User implements UserDetails {
   public String getId() { return id; }
   public void setId(String id) { this.id = id; }
 
-  // public String getUsername() { return username; }
   public void setUsername(String username) { this.username = username; }
-
   public void setPassword(String password) { this.password = password; }
 
-  public Project getProject() { return project; }
-  public void setProject(Project project) { this.project = project; }
+//   public Project getProject() { return project; }
+//   public void setProject(Project project) { this.project = project; }
 }

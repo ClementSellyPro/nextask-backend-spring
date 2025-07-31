@@ -28,6 +28,16 @@ public class ColumnEntity {
   @JsonManagedReference
   private List<Card> cards = new ArrayList<>();
 
+  @Override
+  public String toString() {
+    return "ColumnEntity{" +
+            "id='" + id + '\'' +
+            ", name='" + name + '\'' +
+            ", color='" + color + '\'' +
+            ", projectId='" + (project != null ? project.getId() : "null") + '\'' +
+            '}';
+  }
+
   // Constructors
   public ColumnEntity() {}
   
