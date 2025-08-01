@@ -14,8 +14,6 @@ import com.nextask.nextask_app.api.entity.User;
 import com.nextask.nextask_app.api.repository.ProjectRepository;
 import com.nextask.nextask_app.api.repository.UserRepository;
 
-import jakarta.transaction.Transactional;
-
 @Service
 public class UserService implements UserDetailsService {
     
@@ -35,22 +33,15 @@ public class UserService implements UserDetailsService {
     }
     
     public User createUser(String username, String password) {
-        // Vérifier si l'utilisateur existe déjà
         if (userRepository.findByUsername(username).isPresent()) {
             throw new RuntimeException("Username already exists");
         }
         
-        // 1. Créer et sauvegarder l'utilisateur D'ABORD
         User user = new User(username, passwordEncoder.encode(password));
         User savedUser = userRepository.save(user);
         
-        System.out.println("USER SAVED in UserService :::: " + savedUser);
-        
-        // 2. Créer le projet par défaut APRÈS avoir sauvé l'utilisateur
         Project defaultProject = new Project("Default Project", savedUser);
-        Project savedProject = projectRepository.save(defaultProject);
-        
-        System.out.println("PROJECT SAVED in UserService :::: " + savedProject);
+        projectRepository.save(defaultProject);
         
         return savedUser;
     }
@@ -62,9 +53,4 @@ public class UserService implements UserDetailsService {
         return projectRepository.findByUserUsername(username)
             .orElseThrow(() -> new RuntimeException("No project found for current user"));
     }
-
-    // public Project getCurrentUserProject() {
-    //     User currentUser = getCurrentUser();
-    //     return currentUser.getProject();
-    // }
 }

@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-// import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -25,14 +24,6 @@ public class ColumnController {
         .stream().map(ColumnDTO::new).collect(Collectors.toList());
         return ResponseEntity.ok(columns);
     }
-
-    // // GET /api/columns/{id} - Récupérer une colonne par ID
-    // @GetMapping("/{id}")
-    // public ResponseEntity<ColumnEntity> getColumnById(@PathVariable String id) {
-    //     Optional<ColumnEntity> column = columnService.getColumnById(id);
-    //     return column.map(ResponseEntity::ok)
-    //                  .orElse(ResponseEntity.notFound().build());
-    // }
 
     // POST /api/columns - Créer une nouvelle colonne
     @PostMapping

@@ -32,9 +32,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody LoginRequest request) {
         try {
-            System.out.println("GET into AuthController");
             userService.createUser(request.getUsername(), request.getPassword());
-            
             return ResponseEntity.ok("User created successfully");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());

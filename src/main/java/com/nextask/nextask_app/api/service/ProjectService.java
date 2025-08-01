@@ -17,11 +17,7 @@ public class ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
     
-    @Autowired
-    private UserService userService;
-    
     public Project getCurrentUserProject() {
-        // Récupérer l'utilisateur actuel et son projet
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         
