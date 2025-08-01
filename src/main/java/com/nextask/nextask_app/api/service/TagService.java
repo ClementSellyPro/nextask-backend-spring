@@ -1,7 +1,10 @@
 package com.nextask.nextask_app.api.service;
 
+import com.nextask.nextask_app.api.entity.Project;
 import com.nextask.nextask_app.api.entity.Tag;
+import com.nextask.nextask_app.api.repository.ProjectRepository;
 import com.nextask.nextask_app.api.repository.TagRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -12,6 +15,9 @@ public class TagService {
   @Autowired
   private TagRepository tagRepository;
 
+  @Autowired
+  private ProjectRepository projectRepository;
+
   public List<Tag> getAllTags() {
     return tagRepository.findAll();
   }
@@ -20,10 +26,16 @@ public class TagService {
     return tagRepository.findById(id);
   }
 
-  public Tag createTag(Tag tag) {
+  public Tag createTag(Tag tag, String username) {
     if (tagRepository.existsByName(tag.getName())) {
       throw new RuntimeException("Un tag avec ce nom existe déjà");
     }
+
+    Project project = projectRepository.findByUserUsername(username)
+      .orElseThrow(() -> new RuntimeException("Projet de l'utilisateur non trouvé"));
+    
+    tag.setProject(project);
+    System.out.println("TAG FROM SERVICE :::: " + tag);
     return tagRepository.save(tag);
   }
 
