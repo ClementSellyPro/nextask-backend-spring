@@ -18,8 +18,11 @@ public class TagService {
   @Autowired
   private ProjectRepository projectRepository;
 
-  public List<Tag> getAllTags() {
-    return tagRepository.findAll();
+  public List<Tag> getAllTags(String username) {
+    Project project = projectRepository.findByUserUsername(username)
+      .orElseThrow(() -> new RuntimeException("Projet non trouvé"));
+
+    return tagRepository.findByProject(project);
   }
 
   public Optional<Tag> getTagById(String id) {
@@ -27,15 +30,14 @@ public class TagService {
   }
 
   public Tag createTag(Tag tag, String username) {
-    if (tagRepository.existsByName(tag.getName())) {
-      throw new RuntimeException("Un tag avec ce nom existe déjà");
-    }
-
     Project project = projectRepository.findByUserUsername(username)
       .orElseThrow(() -> new RuntimeException("Projet de l'utilisateur non trouvé"));
+
+    if (tagRepository.existsByNameAndProject(tag.getName(), project)) {
+      throw new RuntimeException("Un tag avec ce nom existe déjà");
+    }
     
     tag.setProject(project);
-    System.out.println("TAG FROM SERVICE :::: " + tag);
     return tagRepository.save(tag);
   }
 
