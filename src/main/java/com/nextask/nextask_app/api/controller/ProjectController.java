@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nextask.nextask_app.api.DTO.ProjectDTO;
 import com.nextask.nextask_app.api.DTO.UpdateProjectNameRequest;
 import com.nextask.nextask_app.api.entity.Project;
 import com.nextask.nextask_app.api.service.ProjectService;
@@ -24,21 +25,23 @@ public class ProjectController {
   private ProjectService projectService;
 
   @GetMapping
-  public ResponseEntity<Project> getCurrentProject() {
+  public ResponseEntity<ProjectDTO> getCurrentProject() {
     try {
       Project project = projectService.getCurrentUserProject();
-      return ResponseEntity.ok(project);
+      ProjectDTO projectDTO = new ProjectDTO(project);
+      return ResponseEntity.ok(projectDTO);
     } catch (RuntimeException e) {
       return ResponseEntity.notFound().build();
     }
   }
-  
 
   @PutMapping("/name")
-  public ResponseEntity<Project> updateProjectName(@RequestBody UpdateProjectNameRequest request) {
+  public ResponseEntity<ProjectDTO> updateProjectName(@RequestBody UpdateProjectNameRequest request) {
+    System.out.println("THE REQUEST  ::: " + request);
     try {
       Project updatedProject = projectService.updateProjectName(request.getName());
-      return ResponseEntity.ok(updatedProject);
+      ProjectDTO projectDTO = new ProjectDTO(updatedProject);
+      return ResponseEntity.ok(projectDTO);
     } catch (RuntimeException e) {
       return ResponseEntity.notFound().build();
     }
