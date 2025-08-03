@@ -1,5 +1,6 @@
 package com.nextask.nextask_app.api.service;
 
+import com.nextask.nextask_app.api.DTO.TagDTO;
 import com.nextask.nextask_app.api.entity.Project;
 import com.nextask.nextask_app.api.entity.Tag;
 import com.nextask.nextask_app.api.repository.ProjectRepository;
@@ -41,13 +42,25 @@ public class TagService {
     return tagRepository.save(tag);
   }
 
-  public Tag updateTag(String id, Tag tagDetails) {
-    Tag tag = tagRepository.findById(id).orElseThrow(() -> new RuntimeException("Tag non trouvé avec l'ID: " + id));
+  public TagDTO updateTag(String id, TagDTO tagDetails, String username) {
+    Project project = projectRepository.findByUserUsername(username)
+      .orElseThrow(() -> new RuntimeException());
 
-    tag.setName(tagDetails.getName());
+    Tag tag = tagRepository.findById(id)
+      .orElseThrow(() -> new RuntimeException("Tag non trouvé avec l'ID: " + id));
+
+    String newName = tagDetails.getName().trim();
+    if(!tag.getName().equals(newName)) {
+      if(tagRepository.existsByNameAndProject(newName, project)) {
+        throw new RuntimeException("Un tag avec ce nom existe déjà dans ce projet");
+      }
+    }
+
+    tag.setName(newName);
     tag.setColor(tagDetails.getColor());
     
-    return tagRepository.save(tag);
+    Tag savedTag = tagRepository.save(tag);
+    return new TagDTO(savedTag);
   }
 
   public void deleteTag(String id) {

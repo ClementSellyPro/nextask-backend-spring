@@ -55,9 +55,9 @@ public class TagController {
     
     // PUT /api/tags/{id} - Mettre à jour un tag
     @PutMapping("/{id}")
-    public ResponseEntity<Tag> updateTag(@PathVariable String id, @RequestBody Tag tagDetails) {
+    public ResponseEntity<TagDTO> updateTag(@PathVariable String id, @RequestBody TagDTO tagDetails, Authentication authentication) {
         try {
-            Tag updatedTag = tagService.updateTag(id, tagDetails);
+            TagDTO updatedTag = tagService.updateTag(id, tagDetails, authentication.getName());
             return ResponseEntity.ok(updatedTag);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
