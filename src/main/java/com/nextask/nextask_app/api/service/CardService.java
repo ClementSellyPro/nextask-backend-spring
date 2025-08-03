@@ -1,15 +1,22 @@
 package com.nextask.nextask_app.api.service;
 
+import com.nextask.nextask_app.api.DTO.CreatedCardRequest;
 import com.nextask.nextask_app.api.entity.Card;
 import com.nextask.nextask_app.api.entity.ColumnEntity;
 import com.nextask.nextask_app.api.entity.Project;
+import com.nextask.nextask_app.api.entity.Tag;
 import com.nextask.nextask_app.api.repository.CardRepository;
 import com.nextask.nextask_app.api.repository.ColumnRepository;
+import com.nextask.nextask_app.api.repository.ProjectRepository;
+import com.nextask.nextask_app.api.repository.TagRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CardService {
@@ -21,7 +28,12 @@ public class CardService {
 
   @Autowired
   private UserService userService;
-  // private TagRepository tagRepository;
+
+  @Autowired
+  private TagRepository tagRepository;
+
+  @Autowired
+  private ProjectRepository projectRepository;
 
   public List<Card> getCardsByColumn(String columnId) {
         // Vérifier que la colonne appartient à l'utilisateur
@@ -36,24 +48,36 @@ public class CardService {
         return cardRepository.findByColumnId(columnId);
     }
     
-    public Card createCard(String columnId, String title, String description, LocalDateTime limitDate, String storyPoints) {
-        ColumnEntity column = columnRepository.findById(columnId)
-                .orElseThrow(() -> new RuntimeException("Column not found"));
+    public Card createCard(CreatedCardRequest cardRequest, String username) {
         
         // Vérifier que la colonne appartient à l'utilisateur
-        Project userProject = userService.getCurrentUserProject();
+        Project userProject = projectRepository.findByUserUsername(username)
+            .orElseThrow(() -> new RuntimeException("Project de l'utilisateur non trouvé"));
+
+        ColumnEntity column = columnRepository.findById(cardRequest.getColumn_id())
+            .orElseThrow(() -> new RuntimeException("Column not found"));
+        
         if (!column.getProject().getId().equals(userProject.getId())) {
             throw new RuntimeException("Access denied");
         }
         
         Card card = new Card();
-        card.setTitle(title);
-        card.setDescription(description);
-        card.setLimitDate(limitDate);
-        card.setStoryPoints(storyPoints);
-        card.setProject(userProject);
+        card.setTitle(cardRequest.getTitle());
+        card.setDescription(cardRequest.getDescription());
+        card.setLimitDate(cardRequest.getLimitDate());
+        card.setStoryPoints(cardRequest.getStoryPoints());
         card.setColumn(column);
-        
+        card.setProject(userProject);
+
+        if(cardRequest.getTags() != null) {
+            Set<Tag> tags = new HashSet<>();
+            for(String tagId : cardRequest.getTags()) {
+                Tag tag = tagRepository.findById(tagId)
+                    .orElseThrow(() -> new RuntimeException("Tag non trouvé"));
+
+                    tags.add(tag);
+            }
+        }
         return cardRepository.save(card);
     }
     

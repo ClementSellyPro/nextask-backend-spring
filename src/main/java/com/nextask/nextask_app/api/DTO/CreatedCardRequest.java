@@ -1,7 +1,12 @@
 package com.nextask.nextask_app.api.DTO;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import com.nextask.nextask_app.api.entity.Card;
+import com.nextask.nextask_app.api.entity.Project;
+import com.nextask.nextask_app.api.entity.Tag;
 
 public class CreatedCardRequest {
   private String title;
@@ -9,9 +14,22 @@ public class CreatedCardRequest {
   private LocalDateTime limitDate;
   private String storyPoints;
   private String column_id;
-  private Set<String> tagIds;
+  private List<String> tagIds;
+  private Project project;
 
   public CreatedCardRequest() {}
+
+  public CreatedCardRequest(Card card) {
+    this.title = card.getTitle();
+    this.description = card.getDescription();
+    this.limitDate = card.getLimitDate();
+    this.storyPoints = card.getStoryPoints();
+    this.column_id = card.getColumn().getId();
+    this.tagIds = card.getTags().stream()
+      .map(Tag::getId)
+      .collect(Collectors.toList());
+      this.project = card.getProject();
+  }
     
   // Getters and Setters
   public String getTitle() { return title; }
@@ -29,8 +47,11 @@ public class CreatedCardRequest {
   public String getColumn_id() { return column_id; }
   public void setColumn(String column) { this.column_id = column; }
   
-  public Set<String> getTags() { return tagIds; }
-  public void setTags(Set<String> tags) { this.tagIds = tags; }
+  public List<String> getTags() { return tagIds; }
+  public void setTags(List<String> tags) { this.tagIds = tags; }
+
+  public Project getProject() { return project; }
+  public void setProject(Project project) { this.project = project; }
 
   @Override
   public String toString() {
