@@ -25,11 +25,6 @@ public class ProjectService {
                 .orElseThrow(() -> new RuntimeException("No project found for current user"));
     }
     
-    // public String getCurrentProjectName() {
-    //     Project project = getCurrentUserProject();
-    //     return project.getName();
-    // }
-    
     public Project updateProjectName(String newName) {
         Project project = getCurrentUserProject();
         project.setName(newName);

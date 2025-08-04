@@ -37,7 +37,6 @@ public class ProjectController {
 
   @PutMapping("/name")
   public ResponseEntity<ProjectDTO> updateProjectName(@RequestBody UpdateProjectNameRequest request) {
-    System.out.println("THE REQUEST  ::: " + request);
     try {
       Project updatedProject = projectService.updateProjectName(request.getName());
       ProjectDTO projectDTO = new ProjectDTO(updatedProject);
