@@ -1,5 +1,6 @@
 package com.nextask.nextask_app.api.controller;
 
+import com.nextask.nextask_app.api.DTO.CardResponse;
 import com.nextask.nextask_app.api.DTO.CreatedCardRequest;
 import com.nextask.nextask_app.api.DTO.UpdateCardRequest;
 import com.nextask.nextask_app.api.entity.Card;
@@ -42,14 +43,13 @@ public class CardController {
 
     // POST /api/cards - Créer une nouvelle carte
     @PostMapping
-    public ResponseEntity<CreatedCardRequest> createCard(@RequestBody CreatedCardRequest cardRequest, Authentication authentication) {
-        System.out.println("Card recu ::: " + cardRequest);
+    public ResponseEntity<CardResponse> createCard(@RequestBody CreatedCardRequest cardRequest, Authentication authentication) {
         try {
             Card createdCard = cardService.createCard(
                 cardRequest,
                 authentication.getName()
             );
-            return ResponseEntity.status(HttpStatus.CREATED).body(new CreatedCardRequest(createdCard));
+            return ResponseEntity.status(HttpStatus.CREATED).body(new CardResponse(createdCard));
         } catch (RuntimeException e) {
             System.err.println("ERROR CREATING CARD: " + e.getMessage());
             e.printStackTrace();

@@ -77,6 +77,7 @@ public class CardService {
 
                     tags.add(tag);
             }
+            card.setTags(tags);
         }
         return cardRepository.save(card);
     }
