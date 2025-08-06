@@ -1,5 +1,6 @@
 package com.nextask.nextask_app.api.service;
 
+import com.nextask.nextask_app.api.DTO.CardResponse;
 import com.nextask.nextask_app.api.DTO.CreatedCardRequest;
 import com.nextask.nextask_app.api.entity.Card;
 import com.nextask.nextask_app.api.entity.ColumnEntity;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class CardService {
@@ -114,9 +116,12 @@ public class CardService {
         cardRepository.delete(card);
     }
 
-  // public List<Card> getAllCards() {
-  //   return cardRepository.findAll();
-  // }
+  public List<CardResponse> getAllCards() {
+    List<Card> cards = cardRepository.findAll();
+    return cards.stream()
+        .map(CardResponse::new)
+        .collect(Collectors.toList());
+  }
 
   // public Optional<Card> getCardById(String id) {
   //   return cardRepository.findById(id);

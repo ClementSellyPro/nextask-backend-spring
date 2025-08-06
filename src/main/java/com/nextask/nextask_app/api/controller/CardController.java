@@ -20,11 +20,11 @@ public class CardController {
     private CardService cardService;
     
     // GET /api/cards - Récupérer toutes les cartes
-    // @GetMapping
-    // public ResponseEntity<List<Card>> getAllCards() {
-    //     List<Card> cards = cardService.getAllCards();
-    //     return ResponseEntity.ok(cards);
-    // }
+    @GetMapping
+    public ResponseEntity<List<CardResponse>> getAllCards() {
+        List<CardResponse> cards = cardService.getAllCards();
+        return ResponseEntity.ok(cards);
+    }
     
     // GET /api/cards/{id} - Récupérer une carte par ID
     // @GetMapping("/{id}")
