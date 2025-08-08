@@ -25,6 +25,16 @@ public class CardResponse {
     this.description = card.getDescription();
     this.limitDate = card.getLimitDate();
     this.storyPoints = card.getStoryPoints();
+
+    if (card.getProject() != null) {
+      this.projectId = card.getProject().getId();
+      this.projectName = card.getProject().getName();
+    }
+    
+    if (card.getColumn() != null) {
+      this.columnId = card.getColumn().getId();
+      this.columnName = card.getColumn().getName();
+    }
   }
 
   // Getters and Setters

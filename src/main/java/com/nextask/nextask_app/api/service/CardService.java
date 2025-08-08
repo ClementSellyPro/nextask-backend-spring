@@ -37,10 +37,37 @@ public class CardService {
   @Autowired
   private ProjectRepository projectRepository;
 
+  public List<CardResponse> getCardsByUser(String username) {
+    Project userProject = projectRepository.findByUserUsername(username)
+        .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé : " + username));
+
+    List<Card> cards = cardRepository.findByProjectId(userProject.getId());
+
+    return cards.stream()
+        .map(this::convertToCardResponse)
+        .collect(Collectors.toList());
+  }
+
+  private CardResponse convertToCardResponse(Card card) {
+        CardResponse response = new CardResponse(card);
+        
+        if (card.getProject() != null) {
+            response.setProjectId(card.getProject().getId());
+            response.setProjectName(card.getProject().getName());
+        }
+        
+        if (card.getColumn() != null) {
+            response.setColumnId(card.getColumn().getId());
+            response.setColumnName(card.getColumn().getName());
+        }
+        
+        return response;
+    }
+
   public List<Card> getCardsByColumn(String columnId) {
         // Vérifier que la colonne appartient à l'utilisateur
         ColumnEntity column = columnRepository.findById(columnId)
-                .orElseThrow(() -> new RuntimeException("Column not found"));
+            .orElseThrow(() -> new RuntimeException("Column not found"));
         
         Project userProject = userService.getCurrentUserProject();
         if (!column.getProject().getId().equals(userProject.getId())) {

@@ -21,8 +21,8 @@ public class CardController {
     
     // GET /api/cards - Récupérer toutes les cartes
     @GetMapping
-    public ResponseEntity<List<CardResponse>> getAllCards() {
-        List<CardResponse> cards = cardService.getAllCards();
+    public ResponseEntity<List<CardResponse>> getAllCards(Authentication authentication) {
+        List<CardResponse> cards = cardService.getCardsByUser(authentication.getName());
         return ResponseEntity.ok(cards);
     }
     
