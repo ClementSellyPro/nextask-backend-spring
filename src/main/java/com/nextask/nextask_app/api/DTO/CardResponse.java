@@ -2,6 +2,7 @@ package com.nextask.nextask_app.api.DTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.nextask.nextask_app.api.entity.Card;
 
@@ -34,6 +35,11 @@ public class CardResponse {
     if (card.getColumn() != null) {
       this.columnId = card.getColumn().getId();
       this.columnName = card.getColumn().getName();
+    }
+
+    if (card.getTags() != null) {
+      List<TagDTO> tagsDTOs = card.getTags().stream().map(TagDTO::new).collect(Collectors.toList());
+      this.tags = tagsDTOs;
     }
   }
 
