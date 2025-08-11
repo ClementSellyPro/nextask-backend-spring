@@ -59,16 +59,15 @@ public class CardController {
     
     // PUT /api/cards/{id} - Mettre à jour une carte
     @PutMapping("/{id}")
-    public ResponseEntity<Card> updateCard(@PathVariable String id, @RequestBody UpdateCardRequest cardRequest) {
+    public ResponseEntity<CardResponse> updateCard(@PathVariable String id, @RequestBody UpdateCardRequest cardRequest, Authentication authentication) {
         try {
-            Card updatedCard = cardService.updateCard(
-                id, 
-                cardRequest.getTitle(), 
-                cardRequest.getDescription(), 
-                cardRequest.getLimitDate(), 
-                cardRequest.getStoryPoints()
-            );
-            return ResponseEntity.ok(updatedCard);
+            if(!id.equals(cardRequest.getId())) {
+                return ResponseEntity.badRequest().build();
+            }
+
+            Card updatedCard = cardService.updateCard(cardRequest, authentication.getName());
+            CardResponse cardResponse = new CardResponse(updatedCard);
+            return ResponseEntity.ok(cardResponse);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }

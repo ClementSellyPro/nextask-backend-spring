@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.nextask.nextask_app.api.entity.Card;
+import com.nextask.nextask_app.api.entity.Tag;
 
 public class UpdateCardRequest {
     private String id;
@@ -13,7 +14,7 @@ public class UpdateCardRequest {
     private LocalDateTime limitDate;
     private String storyPoints;
     private String column_id;
-    private List<TagDTO> tagIds;
+    private List<String> tags;
     
     // Constructeurs, getters, setters
     public UpdateCardRequest() {}
@@ -25,8 +26,8 @@ public class UpdateCardRequest {
         this.limitDate = card.getLimitDate();
         this.storyPoints = card.getStoryPoints();
         this.column_id =  card.getColumn().getId();
-        this.tagIds = card.getTags().stream()
-            .map(TagDTO::new)
+        this.tags = card.getTags().stream()
+            .map(Tag::getId)
             .collect(Collectors.toList());
     }
     
@@ -49,6 +50,19 @@ public class UpdateCardRequest {
     public String getColumn_id() { return column_id; }
     public void setColumn_id(String column_id) { this.column_id = column_id; }
     
-    public List<TagDTO> getTags() { return tagIds; }
-    public void setTags(List<TagDTO> tags) { this.tagIds = tags; }
+    public List<String> getTags() { return tags; }
+    public void setTags(List<String> tags) { this.tags = tags; }
+
+    @Override
+    public String toString() {
+        return "UpdateCardRequest=" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", limitDate=" + limitDate +
+                ", storyPoints='" + storyPoints + '\'' +
+                ", column_id='" + column_id + '\'' +
+                ", tags=" + tags +
+                '}';
+    }
 }
