@@ -20,38 +20,37 @@ import com.nextask.nextask_app.api.service.UserService;
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class AuthController {
     
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    
-    @Autowired
-    private UserService userService;
-    
-    @Autowired
-    private JwtUtil jwtUtil;
-    
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody LoginRequest request) {
-        try {
-            userService.createUser(request.getUsername(), request.getPassword());
-            return ResponseEntity.ok("User created successfully");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
-        }
-    }
-    
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
-        try {
-            authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
-            );
-            
-            String token = jwtUtil.generateToken(request.getUsername());
+	@Autowired
+	private AuthenticationManager authenticationManager;
+	
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private JwtUtil jwtUtil;
+	
+	@PostMapping("/register")
+	public ResponseEntity<String> register(@RequestBody LoginRequest request) {
+		try {
+			userService.createUser(request.getUsername(), request.getPassword());
+			return ResponseEntity.ok("User created successfully");
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+		}
+	}
+	
+	@PostMapping("/login")
+	public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+		try {
+			authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+			);
+			String token = jwtUtil.generateToken(request.getUsername());
 
-            return ResponseEntity.ok(new LoginResponse(token));
-        } catch (Exception e) {
-            System.err.println("Login failed: " + e.getMessage());
-            return ResponseEntity.status(401).body(new LoginResponse("Invalid credentials"));
-        }
-    }
+			return ResponseEntity.ok(new LoginResponse(token));
+		} catch (Exception e) {
+			System.err.println("Login failed: " + e.getMessage());
+			return ResponseEntity.status(401).body(new LoginResponse("Invalid credentials"));
+		}
+	}
 }

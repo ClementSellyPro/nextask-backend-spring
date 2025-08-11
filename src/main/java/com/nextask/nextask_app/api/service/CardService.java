@@ -67,7 +67,7 @@ public class CardService {
   public List<Card> getCardsByColumn(String columnId) {
         // Vérifier que la colonne appartient à l'utilisateur
         ColumnEntity column = columnRepository.findById(columnId)
-            .orElseThrow(() -> new RuntimeException("Column not found"));
+            .orElseThrow(() -> new RuntimeException("Colonne non trouvé"));
         
         Project userProject = userService.getCurrentUserProject();
         if (!column.getProject().getId().equals(userProject.getId())) {
@@ -84,7 +84,7 @@ public class CardService {
             .orElseThrow(() -> new RuntimeException("Project de l'utilisateur non trouvé"));
 
         ColumnEntity column = columnRepository.findById(cardRequest.getColumn_id())
-            .orElseThrow(() -> new RuntimeException("Column not found"));
+            .orElseThrow(() -> new RuntimeException("Colonne non trouvé"));
         
         if (!column.getProject().getId().equals(userProject.getId())) {
             throw new RuntimeException("Access denied");
@@ -113,7 +113,7 @@ public class CardService {
     
     public Card updateCard(UpdateCardRequest updateCardRequest, String username) {
         Card card = cardRepository.findById(updateCardRequest.getId())
-            .orElseThrow(() -> new RuntimeException("Card not found"));
+            .orElseThrow(() -> new RuntimeException("Card non trouvé"));
         
         // Vérifier que la carte appartient à l'utilisateur
         Project userProject = projectRepository.findByUserUsername(username)
@@ -139,12 +139,13 @@ public class CardService {
         return cardRepository.save(card);
     }
     
-    public void deleteCard(String cardId) {
+    public void deleteCard(String cardId, String username) {
         Card card = cardRepository.findById(cardId)
-            .orElseThrow(() -> new RuntimeException("Card not found"));
+            .orElseThrow(() -> new RuntimeException("Card non trouvé"));
         
         // Vérifier que la carte appartient à l'utilisateur
-        Project userProject = userService.getCurrentUserProject();
+        Project userProject = projectRepository.findByUserUsername(username)
+            .orElseThrow(() -> new RuntimeException("Project non trouvé"));
         if (!card.getProject().getId().equals(userProject.getId())) {
             throw new RuntimeException("Access denied");
         }

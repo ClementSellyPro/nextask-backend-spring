@@ -15,47 +15,47 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class ColumnController {
   @Autowired
-    private ColumnService columnService;
-    
-    // GET /api/columns - Récupérer toutes les colonnes
-    @GetMapping
-    public ResponseEntity<List<ColumnDTO>> getAllColumns() {
-        List<ColumnDTO> columns = columnService.getUserColumns()
-        .stream().map(ColumnDTO::new).collect(Collectors.toList());
-        return ResponseEntity.ok(columns);
-    }
+	private ColumnService columnService;
+	
+	// GET /api/columns - Récupérer toutes les colonnes
+	@GetMapping
+	public ResponseEntity<List<ColumnDTO>> getAllColumns() {
+		List<ColumnDTO> columns = columnService.getUserColumns()
+		.stream().map(ColumnDTO::new).collect(Collectors.toList());
+		return ResponseEntity.ok(columns);
+	}
 
-    // POST /api/columns - Créer une nouvelle colonne
-    @PostMapping
-    public ResponseEntity<ColumnDTO> createColumn(@RequestBody ColumnDTO column) {
-        try {
-            ColumnEntity createdColumn = columnService.createColumn(column.getName(), column.getColor());
-            ColumnDTO responseColumn = new ColumnDTO(createdColumn);
-            return ResponseEntity.status(HttpStatus.CREATED).body(responseColumn);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-    
-    // PUT /api/columns/{id} - Mettre à jour une colonne
-    @PutMapping("/{id}")
-    public ResponseEntity<ColumnEntity> updateColumn(@PathVariable String id, @RequestBody ColumnEntity columnDetails) {
-        try {
-            ColumnEntity updatedColumn = columnService.updateColumn(id, columnDetails.getName(), columnDetails.getColor());
-            return ResponseEntity.ok(updatedColumn);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-    
-    // DELETE /api/columns/{id} - Supprimer une colonne
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteColumn(@PathVariable String id) {
-        try {
-            columnService.deleteColumn(id);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
+	// POST /api/columns - Créer une nouvelle colonne
+	@PostMapping
+	public ResponseEntity<ColumnDTO> createColumn(@RequestBody ColumnDTO column) {
+		try {
+			ColumnEntity createdColumn = columnService.createColumn(column.getName(), column.getColor());
+			ColumnDTO responseColumn = new ColumnDTO(createdColumn);
+			return ResponseEntity.status(HttpStatus.CREATED).body(responseColumn);
+		} catch (RuntimeException e) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+	
+	// PUT /api/columns/{id} - Mettre à jour une colonne
+	@PutMapping("/{id}")
+	public ResponseEntity<ColumnEntity> updateColumn(@PathVariable String id, @RequestBody ColumnEntity columnDetails) {
+		try {
+			ColumnEntity updatedColumn = columnService.updateColumn(id, columnDetails.getName(), columnDetails.getColor());
+			return ResponseEntity.ok(updatedColumn);
+		} catch (RuntimeException e) {
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	// DELETE /api/columns/{id} - Supprimer une colonne
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteColumn(@PathVariable String id) {
+		try {
+			columnService.deleteColumn(id);
+			return ResponseEntity.noContent().build();
+		} catch (RuntimeException e) {
+			return ResponseEntity.notFound().build();
+		}
+	}
 }
