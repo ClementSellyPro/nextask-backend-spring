@@ -76,10 +76,10 @@ public class CardController {
 		}
 	}
 
-	// GET /api/cards/tag/{tagId} - Récupérer les cartes par tag
-	// @GetMapping("/tag/{tagId}")
-	// public ResponseEntity<List<Card>> getCardsByTag(@PathVariable String tagId) {
-	//     List<Card> cards = cardService.getCardsByTag(tagId);
-	//     return ResponseEntity.ok(cards);
-	// }
+	// GET /api/cards/tag - Récupérer les cartes par tag
+	@GetMapping("/tag")
+	public ResponseEntity<List<CardResponse>> getCardsByTag(@RequestParam List<String> tagIds, Authentication authentication) {
+	    List<CardResponse> cards = cardService.getCardsByTag(tagIds, authentication.getName());
+	    return ResponseEntity.ok(cards);
+	}
 }

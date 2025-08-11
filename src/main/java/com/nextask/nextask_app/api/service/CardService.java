@@ -39,123 +39,135 @@ public class CardService {
 
   public List<CardResponse> getCardsByUser(String username) {
     Project userProject = projectRepository.findByUserUsername(username)
-        .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé : " + username));
+			.orElseThrow(() -> new RuntimeException("Utilisateur non trouvé : " + username));
 
     List<Card> cards = cardRepository.findByProjectId(userProject.getId());
 
     return cards.stream()
-        .map(this::convertToCardResponse)
-        .collect(Collectors.toList());
+			.map(this::convertToCardResponse)
+			.collect(Collectors.toList());
   }
 
   private CardResponse convertToCardResponse(Card card) {
-        CardResponse response = new CardResponse(card);
-        
-        if (card.getProject() != null) {
-            response.setProjectId(card.getProject().getId());
-            response.setProjectName(card.getProject().getName());
-        }
-        
-        if (card.getColumn() != null) {
-            response.setColumnId(card.getColumn().getId());
-            response.setColumnName(card.getColumn().getName());
-        }
-        
-        return response;
-    }
+		CardResponse response = new CardResponse(card);
+
+		if (card.getProject() != null) {
+			response.setProjectId(card.getProject().getId());
+			response.setProjectName(card.getProject().getName());
+		}
+		
+		if (card.getColumn() != null) {
+			response.setColumnId(card.getColumn().getId());
+			response.setColumnName(card.getColumn().getName());
+		}
+		return response;
+	}
 
   public List<Card> getCardsByColumn(String columnId) {
-        // Vérifier que la colonne appartient à l'utilisateur
-        ColumnEntity column = columnRepository.findById(columnId)
-            .orElseThrow(() -> new RuntimeException("Colonne non trouvé"));
-        
-        Project userProject = userService.getCurrentUserProject();
-        if (!column.getProject().getId().equals(userProject.getId())) {
-            throw new RuntimeException("Access denied");
-        }
-        
-        return cardRepository.findByColumnId(columnId);
-    }
-    
-    public Card createCard(CreatedCardRequest cardRequest, String username) {
-        
-        // Vérifier que la colonne appartient à l'utilisateur
-        Project userProject = projectRepository.findByUserUsername(username)
-            .orElseThrow(() -> new RuntimeException("Project de l'utilisateur non trouvé"));
+		// Vérifier que la colonne appartient à l'utilisateur
+		ColumnEntity column = columnRepository.findById(columnId)
+			.orElseThrow(() -> new RuntimeException("Colonne non trouvé"));
+		
+		Project userProject = userService.getCurrentUserProject();
+		if (!column.getProject().getId().equals(userProject.getId())) {
+			throw new RuntimeException("Access denied");
+		}
+		
+		return cardRepository.findByColumnId(columnId);
+	}
+	
+	public Card createCard(CreatedCardRequest cardRequest, String username) {
+			
+		// Vérifier que la colonne appartient à l'utilisateur
+		Project userProject = projectRepository.findByUserUsername(username)
+			.orElseThrow(() -> new RuntimeException("Project de l'utilisateur non trouvé"));
 
-        ColumnEntity column = columnRepository.findById(cardRequest.getColumn_id())
-            .orElseThrow(() -> new RuntimeException("Colonne non trouvé"));
-        
-        if (!column.getProject().getId().equals(userProject.getId())) {
-            throw new RuntimeException("Access denied");
-        }
-        
-        Card card = new Card();
-        card.setTitle(cardRequest.getTitle());
-        card.setDescription(cardRequest.getDescription());
-        card.setLimitDate(cardRequest.getLimitDate());
-        card.setStoryPoints(cardRequest.getStoryPoints());
-        card.setColumn(column);
-        card.setProject(userProject);
+		ColumnEntity column = columnRepository.findById(cardRequest.getColumn_id())
+			.orElseThrow(() -> new RuntimeException("Colonne non trouvé"));
+		
+		if (!column.getProject().getId().equals(userProject.getId())) {
+			throw new RuntimeException("Access denied");
+		}
+		
+		Card card = new Card();
+		card.setTitle(cardRequest.getTitle());
+		card.setDescription(cardRequest.getDescription());
+		card.setLimitDate(cardRequest.getLimitDate());
+		card.setStoryPoints(cardRequest.getStoryPoints());
+		card.setColumn(column);
+		card.setProject(userProject);
 
-        if(cardRequest.getTags() != null) {
-            Set<Tag> tags = new HashSet<>();
-            for(String tagId : cardRequest.getTags()) {
-                Tag tag = tagRepository.findById(tagId)
-                    .orElseThrow(() -> new RuntimeException("Tag non trouvé"));
+		if(cardRequest.getTags() != null) {
+			Set<Tag> tags = new HashSet<>();
+			for(String tagId : cardRequest.getTags()) {
+				Tag tag = tagRepository.findById(tagId)
+					.orElseThrow(() -> new RuntimeException("Tag non trouvé"));
 
-                    tags.add(tag);
-            }
-            card.setTags(tags);
-        }
-        return cardRepository.save(card);
-    }
-    
-    public Card updateCard(UpdateCardRequest updateCardRequest, String username) {
-        Card card = cardRepository.findById(updateCardRequest.getId())
-            .orElseThrow(() -> new RuntimeException("Card non trouvé"));
-        
-        // Vérifier que la carte appartient à l'utilisateur
-        Project userProject = projectRepository.findByUserUsername(username)
-            .orElseThrow(() -> new RuntimeException("Projet de l'utilisateur non trouvé"));
-        if (!card.getProject().getId().equals(userProject.getId())) {
-            throw new RuntimeException("Access denied");
-        }
-        
-        card.setTitle(updateCardRequest.getTitle());
-        card.setDescription(updateCardRequest.getDescription());
-        card.setLimitDate(updateCardRequest.getLimitDate());
-        card.setStoryPoints(updateCardRequest.getStoryPoints());
+					tags.add(tag);
+			}
+			card.setTags(tags);
+		}
+		return cardRepository.save(card);
+	}
+	
+	public Card updateCard(UpdateCardRequest updateCardRequest, String username) {
+			Card card = cardRepository.findById(updateCardRequest.getId())
+					.orElseThrow(() -> new RuntimeException("Card non trouvé"));
+			
+			// Vérifier que la carte appartient à l'utilisateur
+			Project userProject = projectRepository.findByUserUsername(username)
+					.orElseThrow(() -> new RuntimeException("Projet de l'utilisateur non trouvé"));
+			if (!card.getProject().getId().equals(userProject.getId())) {
+					throw new RuntimeException("Access denied");
+			}
+			
+			card.setTitle(updateCardRequest.getTitle());
+			card.setDescription(updateCardRequest.getDescription());
+			card.setLimitDate(updateCardRequest.getLimitDate());
+			card.setStoryPoints(updateCardRequest.getStoryPoints());
 
-        if(updateCardRequest.getTags() != null) {
-            Set<Tag> tags = new HashSet<>();
-            for(String tagId : updateCardRequest.getTags()) {
-                Tag tag = tagRepository.findById(tagId)
-                    .orElseThrow(() -> new RuntimeException("Tag non trouvé"));
-                tags.add(tag);
-            }
-            card.setTags(tags);
-        }
-        return cardRepository.save(card);
-    }
-    
-    public void deleteCard(String cardId, String username) {
-        Card card = cardRepository.findById(cardId)
-            .orElseThrow(() -> new RuntimeException("Card non trouvé"));
-        
-        // Vérifier que la carte appartient à l'utilisateur
-        Project userProject = projectRepository.findByUserUsername(username)
-            .orElseThrow(() -> new RuntimeException("Project non trouvé"));
-        if (!card.getProject().getId().equals(userProject.getId())) {
-            throw new RuntimeException("Access denied");
-        }
-        cardRepository.delete(card);
-    }
+			if(updateCardRequest.getTags() != null) {
+					Set<Tag> tags = new HashSet<>();
+					for(String tagId : updateCardRequest.getTags()) {
+							Tag tag = tagRepository.findById(tagId)
+									.orElseThrow(() -> new RuntimeException("Tag non trouvé"));
+							tags.add(tag);
+					}
+					card.setTags(tags);
+			}
+			return cardRepository.save(card);
+	}
+	
+	public void deleteCard(String cardId, String username) {
+			Card card = cardRepository.findById(cardId)
+					.orElseThrow(() -> new RuntimeException("Card non trouvé"));
+			
+			// Vérifier que la carte appartient à l'utilisateur
+			Project userProject = projectRepository.findByUserUsername(username)
+					.orElseThrow(() -> new RuntimeException("Project non trouvé"));
+			if (!card.getProject().getId().equals(userProject.getId())) {
+					throw new RuntimeException("Access denied");
+			}
+			cardRepository.delete(card);
+	}
 
   public List<CardResponse> getAllCards() {
     List<Card> cards = cardRepository.findAll();
     return cards.stream()
-        .map(CardResponse::new)
-        .collect(Collectors.toList());
+			.map(CardResponse::new)
+			.collect(Collectors.toList());
   }
+
+	public List<CardResponse> getCardsByTag(List<String> tagIds, String username) {
+		Project userProject = projectRepository.findByUserUsername(username)
+			.orElseThrow(() -> new RuntimeException("Projet non trouvé"));
+
+		List<Card> cards = cardRepository.findByProjectId(userProject.getId());
+
+		return cards.stream()
+			.filter(card -> card.getTags().stream()
+				.anyMatch(tag -> tagIds.contains(tag.getId())))
+			.map(this::convertToCardResponse)
+			.collect(Collectors.toList());
+	}
 }
