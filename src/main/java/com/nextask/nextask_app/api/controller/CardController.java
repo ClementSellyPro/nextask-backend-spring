@@ -1,7 +1,9 @@
 package com.nextask.nextask_app.api.controller;
 
+import com.nextask.nextask_app.api.DTO.CardMoveRequest;
 import com.nextask.nextask_app.api.DTO.CardResponse;
 import com.nextask.nextask_app.api.DTO.CreatedCardRequest;
+import com.nextask.nextask_app.api.DTO.PositionUpdateRequest;
 import com.nextask.nextask_app.api.DTO.UpdateCardRequest;
 import com.nextask.nextask_app.api.entity.Card;
 import com.nextask.nextask_app.api.service.CardService;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/cards")
@@ -35,7 +38,9 @@ public class CardController {
 
 	// POST /api/cards - Créer une nouvelle carte
 	@PostMapping
-	public ResponseEntity<CardResponse> createCard(@RequestBody CreatedCardRequest cardRequest, Authentication authentication) {
+	public ResponseEntity<CardResponse> createCard(
+		@RequestBody CreatedCardRequest cardRequest, 
+		Authentication authentication) {
 		try {
 			Card createdCard = cardService.createCard(
 				cardRequest,
@@ -51,7 +56,10 @@ public class CardController {
 	
 	// PUT /api/cards/{id} - Mettre à jour une carte
 	@PutMapping("/{id}")
-	public ResponseEntity<CardResponse> updateCard(@PathVariable String id, @RequestBody UpdateCardRequest cardRequest, Authentication authentication) {
+	public ResponseEntity<CardResponse> updateCard(
+		@PathVariable String id, 
+		@RequestBody UpdateCardRequest cardRequest, 
+		Authentication authentication) {
 		try {
 			if(!id.equals(cardRequest.getId())) {
 				return ResponseEntity.badRequest().build();
@@ -67,7 +75,9 @@ public class CardController {
 
 	// DELETE /api/cards/{id} - Supprimer une carte
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteCard(@PathVariable String id, Authentication authentication) {
+	public ResponseEntity<Void> deleteCard(
+		@PathVariable String id, 
+		Authentication authentication) {
 		try {
 			cardService.deleteCard(id, authentication.getName());
 			return ResponseEntity.noContent().build();
@@ -78,8 +88,29 @@ public class CardController {
 
 	// GET /api/cards/tag - Récupérer les cartes par tag
 	@GetMapping("/tag")
-	public ResponseEntity<List<CardResponse>> getCardsByTag(@RequestParam List<String> tagIds, Authentication authentication) {
+	public ResponseEntity<List<CardResponse>> getCardsByTag(
+		@RequestParam List<String> tagIds, 
+		Authentication authentication) {
 	    List<CardResponse> cards = cardService.getCardsByTag(tagIds, authentication.getName());
 	    return ResponseEntity.ok(cards);
+	}
+
+	// PUT /api/cards/{id}/position
+	@PutMapping("/{id}/position")
+	public ResponseEntity<Void> updatePosition(
+		@PathVariable String id,
+		@RequestBody PositionUpdateRequest request,
+		Authentication authentication) {
+		cardService.reorderCard(id, request.getNewPosition());
+		return ResponseEntity.ok().build();
+	}
+
+	@PutMapping("{id}/move")
+	public ResponseEntity<Void> moveCard(
+		@PathVariable String id, 
+		@RequestBody CardMoveRequest request,
+		Authentication authentication) {
+		cardService.moveCardToColumn(id, request.getNewColumnId(), request.getNewPosition());
+		return ResponseEntity.ok().build();
 	}
 }

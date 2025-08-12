@@ -16,6 +16,7 @@ public class CreatedCardRequest {
   private String column_id;
   private List<String> tagIds;
   private Project project;
+  private Integer position;
 
   public CreatedCardRequest() {}
 
@@ -28,7 +29,8 @@ public class CreatedCardRequest {
     this.tagIds = card.getTags().stream()
       .map(Tag::getId)
       .collect(Collectors.toList());
-      this.project = card.getProject();
+    this.project = card.getProject();
+    this.position = card.getPosition();
   }
     
   // Getters and Setters
@@ -53,6 +55,9 @@ public class CreatedCardRequest {
   public Project getProject() { return project; }
   public void setProject(Project project) { this.project = project; }
 
+  public Integer getPosition() { return position; }
+  public void setPosition(Integer position) { this.position = position; }
+
   @Override
   public String toString() {
     return "CardCreateRequest{" +
@@ -62,6 +67,7 @@ public class CreatedCardRequest {
             ", storyPoints='" + storyPoints + '\'' +
             ", column_id='" + column_id + '\'' +
             ", tagIds=" + tagIds +
+            ", position=" + position +
             '}';
   }
 }

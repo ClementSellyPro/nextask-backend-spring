@@ -12,6 +12,8 @@ import com.nextask.nextask_app.api.repository.ColumnRepository;
 import com.nextask.nextask_app.api.repository.ProjectRepository;
 import com.nextask.nextask_app.api.repository.TagRepository;
 
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -88,6 +90,8 @@ public class CardService {
 		if (!column.getProject().getId().equals(userProject.getId())) {
 			throw new RuntimeException("Access denied");
 		}
+
+		Integer maxPosition = cardRepository.getMaxPositionInColumn(cardRequest.getColumn_id());
 		
 		Card card = new Card();
 		card.setTitle(cardRequest.getTitle());
@@ -96,6 +100,7 @@ public class CardService {
 		card.setStoryPoints(cardRequest.getStoryPoints());
 		card.setColumn(column);
 		card.setProject(userProject);
+		card.setPosition(maxPosition);
 
 		if(cardRequest.getTags() != null) {
 			Set<Tag> tags = new HashSet<>();
@@ -169,5 +174,43 @@ public class CardService {
 				.anyMatch(tag -> tagIds.contains(tag.getId())))
 			.map(this::convertToCardResponse)
 			.collect(Collectors.toList());
+	}
+
+	@Transactional
+	public void reorderCard(String id, Integer newPosition) {
+		Card card = cardRepository.findById(id).orElseThrow(() -> new RuntimeException("Card non trouvé."));
+		Integer oldPosition = card.getPosition();
+		String columnId = card.getColumn().getId();
+
+		if (oldPosition.equals(newPosition)) return;
+
+		if(newPosition > oldPosition) {
+			cardRepository.decrementPositionsBetween(columnId, oldPosition, newPosition);
+		} else {
+			cardRepository.incrementPositionsBetween(columnId, newPosition, oldPosition);
+		}
+
+		cardRepository.updateCardPosition(id, newPosition);
+	}
+
+	public void moveCardToColumn(String id, String newColumnId, Integer newPosition) {
+		Card card = cardRepository.findById(id)
+			.orElseThrow(() -> new RuntimeException("Card non trouvé"));
+
+		String oldColumnId = card.getColumn().getId();
+		Integer oldPosition = card.getPosition();
+
+		if(oldColumnId.equals(newColumnId)) {
+			reorderCard(id, newPosition);
+			return;
+		}
+
+		ColumnEntity newColumn = columnRepository.findById(newColumnId)
+			.orElseThrow(() -> new RuntimeException("Colonne non trouvé"));
+		cardRepository.decrementPositionsAfter(oldColumnId, oldPosition);
+
+		cardRepository.incrementPositionsAfter(newColumnId, newPosition - 1);
+
+		cardRepository.updateTaskColumnAndPosition(id, newColumn, newPosition);
 	}
 }

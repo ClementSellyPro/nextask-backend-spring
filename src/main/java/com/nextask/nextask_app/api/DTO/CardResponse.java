@@ -17,6 +17,7 @@ public class CardResponse {
   private String columnId;
   private String columnName;
   private List<TagDTO> tags;
+  private Integer position;
   
   public CardResponse() {}
   
@@ -26,6 +27,7 @@ public class CardResponse {
     this.description = card.getDescription();
     this.limitDate = card.getLimitDate();
     this.storyPoints = card.getStoryPoints();
+    this.position = card.getPosition();
 
     if (card.getProject() != null) {
       this.projectId = card.getProject().getId();
@@ -73,4 +75,7 @@ public class CardResponse {
   
   public List<TagDTO> getTags() { return tags; }
   public void setTags(List<TagDTO> tags) { this.tags = tags; }
+
+  public Integer getPosition() { return position; }
+  public void setPosition(Integer position) { this.position = position;}
 }

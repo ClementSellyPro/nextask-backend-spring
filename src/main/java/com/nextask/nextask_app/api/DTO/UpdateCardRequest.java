@@ -15,6 +15,7 @@ public class UpdateCardRequest {
     private String storyPoints;
     private String column_id;
     private List<String> tags;
+    private Integer position;
     
     // Constructeurs, getters, setters
     public UpdateCardRequest() {}
@@ -29,6 +30,7 @@ public class UpdateCardRequest {
         this.tags = card.getTags().stream()
             .map(Tag::getId)
             .collect(Collectors.toList());
+        this.position = card.getPosition();
     }
     
     // Getters et setters...
@@ -53,6 +55,9 @@ public class UpdateCardRequest {
     public List<String> getTags() { return tags; }
     public void setTags(List<String> tags) { this.tags = tags; }
 
+    public Integer getPosition() { return position; }
+    public void setPosition(Integer position) { this.position = position; }
+
     @Override
     public String toString() {
         return "UpdateCardRequest=" +
@@ -63,6 +68,7 @@ public class UpdateCardRequest {
                 ", storyPoints='" + storyPoints + '\'' +
                 ", column_id='" + column_id + '\'' +
                 ", tags=" + tags +
+                ", position=" + position +
                 '}';
     }
 }

@@ -29,6 +29,9 @@ public class Card {
   @Column(name = "story_points")
   private String storyPoints;
 
+  @Column(name = "position", nullable = false)
+  private Integer position;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "project_id", nullable = false)
   private Project project;
@@ -54,18 +57,20 @@ public class Card {
             ", description='" + description + '\'' +
             ", limitDate='" + limitDate + '\'' +
             ", storyPoints='" + storyPoints + '\'' +
+            ", position='" + position + '\'' +
             '}';
   }
 
   // Constructors
   public Card() {}
 
-  public Card(String id, String title, String description, LocalDateTime limitDate, String storyPoints) {
+  public Card(String id, String title, String description, LocalDateTime limitDate, String storyPoints, Integer position) {
     this.id = id;
     this.title = title;
     this.description = description;
     this.limitDate = limitDate;
     this.storyPoints = storyPoints;
+    this.position = position;
   }
 
   // Getters and Setters
@@ -92,4 +97,7 @@ public class Card {
 
   public Project getProject() { return project; }
   public void setProject(Project project) { this.project = project; }
+
+  public Integer getPosition() { return position; }
+  public void setPosition(Integer position) { this.position = position; }
 }
