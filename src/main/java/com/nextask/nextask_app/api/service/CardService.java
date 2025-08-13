@@ -43,7 +43,7 @@ public class CardService {
     Project userProject = projectRepository.findByUserUsername(username)
 			.orElseThrow(() -> new RuntimeException("Utilisateur non trouvé : " + username));
 
-    List<Card> cards = cardRepository.findByProjectId(userProject.getId());
+    List<Card> cards = cardRepository.findByProjectIdOrderByPositionAsc(userProject.getId());
 
     return cards.stream()
 			.map(this::convertToCardResponse)
@@ -100,7 +100,7 @@ public class CardService {
 		card.setStoryPoints(cardRequest.getStoryPoints());
 		card.setColumn(column);
 		card.setProject(userProject);
-		card.setPosition(maxPosition);
+		card.setPosition(maxPosition + 1000);
 
 		if(cardRequest.getTags() != null) {
 			Set<Tag> tags = new HashSet<>();
@@ -181,7 +181,6 @@ public class CardService {
 		Card card = cardRepository.findById(id).orElseThrow(() -> new RuntimeException("Card non trouvé."));
 		Integer oldPosition = card.getPosition();
 		String columnId = card.getColumn().getId();
-
 		if (oldPosition.equals(newPosition)) return;
 
 		if(newPosition > oldPosition) {
@@ -189,7 +188,6 @@ public class CardService {
 		} else {
 			cardRepository.incrementPositionsBetween(columnId, newPosition, oldPosition);
 		}
-
 		cardRepository.updateCardPosition(id, newPosition);
 	}
 

@@ -5,4 +5,11 @@ public class PositionUpdateRequest {
     
     public Integer getNewPosition() { return newPosition; }
     public void setNewPosition(Integer newPosition) { this.newPosition = newPosition; }
+
+    @Override
+    public String toString() {
+        return "PositionUpdateRequest{" +
+            "newPosition='" + newPosition + 
+            '}';
+    }
 }

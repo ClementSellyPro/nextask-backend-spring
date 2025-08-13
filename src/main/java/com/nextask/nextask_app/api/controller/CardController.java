@@ -95,22 +95,23 @@ public class CardController {
 	    return ResponseEntity.ok(cards);
 	}
 
-	// PUT /api/cards/{id}/position
+	// PUT /api/cards/{id}/position - Changer une carte de position
 	@PutMapping("/{id}/position")
 	public ResponseEntity<Void> updatePosition(
 		@PathVariable String id,
 		@RequestBody PositionUpdateRequest request,
 		Authentication authentication) {
-		cardService.reorderCard(id, request.getNewPosition());
-		return ResponseEntity.ok().build();
+			cardService.reorderCard(id, (request.getNewPosition() + 1) * 1000);
+			return ResponseEntity.ok().build();
 	}
 
-	@PutMapping("{id}/move")
+	// PUT /api/cards/{id}/move - Changer une carte de colonne
+	@PutMapping("/{id}/move")
 	public ResponseEntity<Void> moveCard(
 		@PathVariable String id, 
 		@RequestBody CardMoveRequest request,
 		Authentication authentication) {
-		cardService.moveCardToColumn(id, request.getNewColumnId(), request.getNewPosition());
-		return ResponseEntity.ok().build();
+			cardService.moveCardToColumn(id, request.getNewColumnId(), request.getNewPosition());
+			return ResponseEntity.ok().build();
 	}
 }
