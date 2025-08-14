@@ -191,6 +191,7 @@ public class CardService {
 		cardRepository.updateCardPosition(id, newPosition);
 	}
 
+	@Transactional
 	public void moveCardToColumn(String id, String newColumnId, Integer newPosition) {
 		Card card = cardRepository.findById(id)
 			.orElseThrow(() -> new RuntimeException("Card non trouvé"));

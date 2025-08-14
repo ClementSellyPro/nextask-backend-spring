@@ -111,7 +111,7 @@ public class CardController {
 		@PathVariable String id, 
 		@RequestBody CardMoveRequest request,
 		Authentication authentication) {
-			cardService.moveCardToColumn(id, request.getNewColumnId(), request.getNewPosition());
+			cardService.moveCardToColumn(id, request.getNewColumnId(), (request.getNewPosition() + 1) * 1000);
 			return ResponseEntity.ok().build();
 	}
 }
