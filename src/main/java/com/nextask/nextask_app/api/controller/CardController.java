@@ -2,6 +2,7 @@ package com.nextask.nextask_app.api.controller;
 
 import com.nextask.nextask_app.api.DTO.CardMoveRequest;
 import com.nextask.nextask_app.api.DTO.CardResponse;
+import com.nextask.nextask_app.api.DTO.CompletedUpdateRequest;
 import com.nextask.nextask_app.api.DTO.CreatedCardRequest;
 import com.nextask.nextask_app.api.DTO.PositionUpdateRequest;
 import com.nextask.nextask_app.api.DTO.UpdateCardRequest;
@@ -93,6 +94,17 @@ public class CardController {
 		Authentication authentication) {
 	    List<CardResponse> cards = cardService.getCardsByTag(tagIds, authentication.getName());
 	    return ResponseEntity.ok(cards);
+	}
+
+	// PUT /api/cards/{id}/completed
+	@PutMapping("{id}/completed")
+	public ResponseEntity<Void> updateCompleted(
+		@PathVariable String id,
+		@RequestBody CompletedUpdateRequest request,
+		Authentication authentication
+	) {
+		cardService.updateCompleted(id, request.isCompleted(), authentication.getName());
+		return ResponseEntity.ok().build();
 	}
 
 	// PUT /api/cards/{id}/position - Changer une carte de position

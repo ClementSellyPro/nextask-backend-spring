@@ -18,6 +18,7 @@ public class CardResponse {
   private String columnName;
   private List<TagDTO> tags;
   private Integer position;
+  private boolean isCompleted;
   
   public CardResponse() {}
   
@@ -28,6 +29,7 @@ public class CardResponse {
     this.limitDate = card.getLimitDate();
     this.storyPoints = card.getStoryPoints();
     this.position = card.getPosition();
+    this.isCompleted = card.isCompleted();
 
     if (card.getProject() != null) {
       this.projectId = card.getProject().getId();
@@ -78,4 +80,7 @@ public class CardResponse {
 
   public Integer getPosition() { return position; }
   public void setPosition(Integer position) { this.position = position;}
+
+  public boolean getIsCompleted() { return isCompleted; }
+  public void setIsCompleted(boolean isCompleted) { this.isCompleted = isCompleted; }
 }

@@ -177,6 +177,13 @@ public class CardService {
 	}
 
 	@Transactional
+	public void updateCompleted(String id, boolean isCompleted, String userName) {
+		Card card = cardRepository.findById(id).orElseThrow(() -> new RuntimeException("Card non trouvé."));
+		card.setCompleted(isCompleted);
+		cardRepository.save(card);
+	}
+
+	@Transactional
 	public void reorderCard(String id, Integer newPosition) {
 		Card card = cardRepository.findById(id).orElseThrow(() -> new RuntimeException("Card non trouvé."));
 		Integer oldPosition = card.getPosition();

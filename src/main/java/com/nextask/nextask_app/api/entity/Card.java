@@ -32,6 +32,9 @@ public class Card {
   @Column(name = "position", nullable = false)
   private Integer position;
 
+  @Column(name = "is_completed", nullable= false)
+  private boolean isCompleted = false;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "project_id", nullable = false)
   private Project project;
@@ -58,6 +61,7 @@ public class Card {
             ", limitDate='" + limitDate + '\'' +
             ", storyPoints='" + storyPoints + '\'' +
             ", position='" + position + '\'' +
+            ", isCompleted='" + isCompleted + '\'' +
             '}';
   }
 
@@ -94,6 +98,9 @@ public class Card {
   
   public Set<Tag> getTags() { return tags; }
   public void setTags(Set<Tag> tags) { this.tags = tags; }
+
+  public boolean isCompleted() { return isCompleted; }
+  public void setCompleted(boolean isCompleted) { this.isCompleted = isCompleted; }
 
   public Project getProject() { return project; }
   public void setProject(Project project) { this.project = project; }
