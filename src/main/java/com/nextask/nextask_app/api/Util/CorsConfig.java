@@ -15,7 +15,7 @@ public class CorsConfig {
           registry.addMapping("/**")
                   .allowedOrigins(
                       "http://localhost:4200",
-                      "https://ton-frontend.vercel.app"
+                      "https://app-nextask.netlify.app/"
                   )
                   .allowedMethods("GET","POST","PUT","DELETE","OPTIONS")
                   .allowedHeaders("*")
