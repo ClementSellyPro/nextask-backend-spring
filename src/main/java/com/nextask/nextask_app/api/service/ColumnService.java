@@ -18,7 +18,7 @@ public class ColumnService {
 
     public List<ColumnEntity> getUserColumns() {
       Project userProject = userService.getCurrentUserProject();
-      return columnRepository.findByProjectIdOrderByName(userProject.getId());
+      return columnRepository.findByProjectIdOrderByCreatedAtAsc(userProject.getId());
     }
 
     public ColumnEntity createColumn(String name, String color) {

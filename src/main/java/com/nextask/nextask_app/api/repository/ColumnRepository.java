@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ColumnRepository extends JpaRepository<ColumnEntity, String> {
-  List<ColumnEntity> findByProjectIdOrderByName(String projectId);
+  List<ColumnEntity> findByProjectIdOrderByCreatedAtAsc(String projectId);
   boolean existsByName(String name);
 }

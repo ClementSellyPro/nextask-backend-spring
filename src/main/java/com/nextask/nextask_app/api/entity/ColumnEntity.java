@@ -1,6 +1,8 @@
 package com.nextask.nextask_app.api.entity;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +21,9 @@ public class ColumnEntity {
 
   @Column(nullable = false)
   private String color;
+
+  @Column(name = "created_at", nullable = false, updatable = false)
+  private LocalDateTime createdAt = LocalDateTime.now();
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "project_id", nullable = false)
