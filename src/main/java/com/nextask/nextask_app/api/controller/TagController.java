@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/tags")
-@CrossOrigin(origins = "http://localhost:4200")
 public class TagController {
 	@Autowired
 	private TagService tagService;

@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/columns")
-@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class ColumnController {
   @Autowired
 	private ColumnService columnService;
